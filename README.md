@@ -83,6 +83,22 @@ end
 
 However, the tree of challenges remains the same.
 
+For convenience, the `is_expected` method is also provided:
+
+```ruby
+Fix.describe -6 * 7 do
+  on :abs do
+    # test against the described front object:
+    it { is_expected.to Equal: 42 }
+  end
+end
+
+# .
+#
+# Ran 1 tests in 0.000193 seconds
+# 100% compliant - 0 infos, 0 failures, 0 errors
+```
+
 ## Security
 
 As a basic form of security __Fix::Expect__ provides a set of SHA512 checksums for

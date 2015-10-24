@@ -23,5 +23,14 @@ module Fix
     def expect_block(&block)
       Expect.new(block, *([block_challenge] + challenges))
     end
+
+    # rubocop:disable PredicateName
+
+    # Create a new expection target given the subject.
+    #
+    # @return [Expect] An expect instance.
+    def is_expected
+      Expect.new(subject, *challenges)
+    end
   end
 end

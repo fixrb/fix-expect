@@ -11,12 +11,14 @@ begin
 
     it { MUST Equal: -42 }
     it { expect(app).to Equal: -42 }
+    it { is_expected.to Equal: -42 }
 
     on :abs do
       it { MUST Equal: 42 }
-      it { expect(:boom).to RaiseException: NoMethodError }
       it { expect(app).to Equal: 42 }
+      it { is_expected.to Equal: 42 }
       it { expect_block { app }.to! Equal: 42 } if Process.respond_to?(:fork)
+      it { expect(:boom).to RaiseException: NoMethodError }
     end
   end
 rescue SystemExit => e
