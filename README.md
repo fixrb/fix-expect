@@ -132,3 +132,9 @@ See `LICENSE.md` file.
 [travis]: https://travis-ci.org/fixrb/fix-expect
 [inchpages]: http://inch-ci.org/github/fixrb/fix-expect/
 [rubydoc]: http://rubydoc.info/gems/fix-expect/frames
+
+***
+
+This project is sponsored by:
+
+[![Sashite](http://www.sashite.com/assets/img/sashite.png)](http://www.sashite.com/)
