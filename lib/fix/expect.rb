@@ -17,11 +17,11 @@ module Fix
 
     # Evaluate to a positive assertion.
     #
-    # @param req [Hash, Symbol] The definition of the expected value.
+    # @param m [#matches?] The matcher.
     #
     # @return (see #requirement)
-    def to(req)
-      requirement(req, false).result
+    def to(m)
+      requirement(m, false).result
     end
 
     # Evaluate to a negative assertion.
@@ -29,8 +29,8 @@ module Fix
     # @param (see #to)
     #
     # @return (see #requirement)
-    def not_to(req)
-      requirement(req, true).result
+    def not_to(m)
+      requirement(m, true).result
     end
 
     # Evaluate to a positive assertion in isolation.
@@ -38,8 +38,8 @@ module Fix
     # @param (see #to)
     #
     # @return (see #requirement)
-    def to!(req)
-      requirement(req, false).result(true)
+    def to!(m)
+      requirement(m, false).result(true)
     end
 
     # Evaluate to a negative assertion in isolation.
@@ -47,21 +47,21 @@ module Fix
     # @param (see #to)
     #
     # @return (see #requirement)
-    def not_to!(req)
-      requirement(req, true).result(true)
+    def not_to!(m)
+      requirement(m, true).result(true)
     end
 
     private
 
     # High requirement level.
     #
-    # @param req    [Hash, Symbol]  The definition of the expected value.
-    # @param negate [Boolean]       Evaluate to a negative assertion.
+    # @param m      [#matches?] The matcher.
+    # @param negate [Boolean]   Evaluate to a negative assertion.
     #
     # @return [Spectus::Result::Fail, Spectus::Result::Pass] Report if the spec
     #   pass or fail.
-    def requirement(req, negate)
-      Spectus::RequirementLevel::High.new(req, negate, @object, *@challenges)
+    def requirement(m, negate)
+      Spectus::RequirementLevel::High.new(m, negate, @object, *@challenges)
     end
   end
 end
