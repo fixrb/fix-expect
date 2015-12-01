@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/fixrb/fix-expect.svg?branch=master)][travis]
 [![Code Climate](https://codeclimate.com/github/fixrb/fix-expect/badges/gpa.svg)][codeclimate]
+[![Dependency Status](https://gemnasium.com/fixrb/fix-expect.svg)][gemnasium]
 [![Gem Version](https://badge.fury.io/rb/fix-expect.svg)][gem]
 [![Inline docs](http://inch-ci.org/github/fixrb/fix-expect.svg?branch=master)][inchpages]
 [![Documentation](http://img.shields.io/:yard-docs-38c800.svg)][rubydoc]
@@ -132,6 +133,7 @@ See `LICENSE.md` file.
 [gem]: https://rubygems.org/gems/fix-expect
 [travis]: https://travis-ci.org/fixrb/fix-expect
 [codeclimate]: https://codeclimate.com/github/fixrb/fix-expect
+[gemnasium]: https://gemnasium.com/fixrb/fix-expect
 [inchpages]: http://inch-ci.org/github/fixrb/fix-expect
 [rubydoc]: http://rubydoc.info/gems/fix-expect/frames
 
