@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'fix'
 
 # Namespace for the Fix framework.
@@ -32,5 +34,6 @@ module Fix
     def is_expected
       Expect.new(subject, *challenges)
     end
+    # rubocop:enable PredicateName
   end
 end
