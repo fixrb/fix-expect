@@ -1,24 +1,12 @@
 # Fix::Expect
 
-[![Build Status](https://travis-ci.org/fixrb/fix-expect.svg?branch=master)][travis]
+[![Build Status](https://api.travis-ci.org/fixrb/fix-expect.svg?branch=master)][travis]
 [![Code Climate](https://codeclimate.com/github/fixrb/fix-expect/badges/gpa.svg)][codeclimate]
 [![Gem Version](https://badge.fury.io/rb/fix-expect.svg)][gem]
-[![Inline docs](http://inch-ci.org/github/fixrb/fix-expect.svg?branch=master)][inchpages]
-[![Documentation](http://img.shields.io/:yard-docs-38c800.svg)][rubydoc]
+[![Inline docs](https://inch-ci.org/github/fixrb/fix-expect.svg?branch=master)][inchpages]
+[![Documentation](https://img.shields.io/:yard-docs-38c800.svg)][rubydoc]
 
 > Provides the `expect` syntax.
-
-## Contact
-
-* Home page: https://github.com/fixrb/fix-expect
-* Bugs/issues: https://github.com/fixrb/fix-expect/issues
-* Support: https://stackoverflow.com/questions/tagged/fixrb
-
-## Rubies
-
-* [MRI](https://www.ruby-lang.org/)
-* [Rubinius](http://rubini.us/)
-* [JRuby](http://jruby.org/)
 
 ## Installation
 
@@ -38,101 +26,147 @@ Or install it yourself as:
 
 ## Usage
 
-__Fix::Expect__ lets you express expected outcomes on an object:
+### The `expect` method
+
+__Fix::Expect__ lets you express expected outcomes on an object, thanks to [Spectus](https://rubygems.org/gems/spectus)'s `MUST` and `MUST_NOT` requirement levels.
+
+An **absolute requirement** example:
 
 ```ruby
-expect(value.abs).to equal 42 # => MUST equal 42
-```
-
-Both `expect` and `expect_block` methods are mapped to Spectus's [absolute requirement](https://github.com/fixrb/spectus#absolute-requirement)/[prohibition](https://github.com/fixrb/spectus#absolute-prohibition) to express expectations:
-
-```ruby
-Fix.describe 6 * 7 do
-  it { expect_block { subject.class }.to equal Fixnum }
-  it { expect(subject.class).to equal Fixnum }
+Fix do
+  it { expect(-42.abs).to equal 42 }
 end
-
-# ..
-#
-# Ran 2 tests in 0.000327 seconds
-# 100% compliant - 0 infos, 0 failures, 0 errors
 ```
 
-Using those methods, the default inherited subject can be overridden by the given expected object/block:
+> (irb):2: Success: expected to equal 42.
+
+An **absolute prohibition** example:
 
 ```ruby
-Fix.describe -6 * 7 do
-  on :abs do
-    # test against the described front object:
-    it { MUST_NOT equal 1 }
+Fix do
+  it { expect(-42).not_to equal 42 }
+end
+```
 
-    # another test against -1 object:
-    it { expect(-1).to equal 1 }
+> (irb):5: Success: expected -42 not to equal 42.
+
+Thus, rather than inferring the actual value (which is `41.next`) from the context
+and calculating its value (which is `42`),
+
+rather than letting Fix's default behavior define and compute `41.next` as the actual value to challenge,
+the `expect` method short circuit it with its argument.
+
+These 2 examples are equivalent:
+
+```ruby
+Fix 41 do
+  on :next do
+    it { MUST equal 42 }
+    it { expect(41.next).to equal 42 }
   end
-end
 
-# ..
-#
-# Ran 2 tests in 0.000372 seconds
-# 100% compliant - 0 infos, 0 failures, 0 errors
+  it { MUST equal 41 }
+  it { expect(41.next).to equal 42 }
+end
 ```
 
-However, the tree of challenges remains the same.
+> (irb):9: Success: expected to equal 42.
+> (irb):10: Success: expected to equal 42.
+> (irb):13: Success: expected to equal 41.
+> (irb):14: Success: expected to equal 42.
 
-For convenience, the `is_expected` method is also provided:
+The block syntax is also allowed:
 
 ```ruby
-Fix.describe -6 * 7 do
-  on :abs do
-    # test against the described front object:
+Fix do
+  it { expect { -42.abs }.to equal 42 }
+end
+```
+
+> (irb):2: Success: expected to equal 42.
+
+```ruby
+Fix do
+  it { expect { 4 / 0 }.to raise_exception ZeroDivisionError }
+end
+```
+
+> (irb):5: Success: divided by 0.
+
+### The `is_expected` method
+
+For convenience, an `is_expected` method is provided,
+as an alias of Spectus's [MUST](https://github.com/fixrb/spectus#absolute-requirement):
+
+```ruby
+Fix 41 do
+  on :next do
     it { is_expected.to equal 42 }
   end
 end
-
-# .
-#
-# Ran 1 tests in 0.000176 seconds
-# 100% compliant - 0 infos, 0 failures, 0 errors
 ```
 
-## Security
+> (irb):3: Success: expected to equal 42.
 
-As a basic form of security __Fix::Expect__ provides a set of SHA512 checksums for
-every Gem release.  These checksums can be found in the `checksum/` directory.
-Although these checksums do not prevent malicious users from tampering with a
-built Gem they can be used for basic integrity verification purposes.
+### Code Isolation
 
-The checksum of a file can be checked using the `sha512sum` expect.  For
-example:
+When executing expectations, side-effects may occur.
+Because they may or may not be desired, each requirement level has 2 versions:
 
-    $ sha512sum pkg/fix-expect-0.1.0.gem
-    26198b7812a5ac118a5f2a1b63927871b3378efb071b37abb7e1ba87c1aac9f3a6b45eeae87d9dc647b194c15171b13f15e46503a9a1440b1233faf924381ff5  pkg/fix-expect-0.1.0.gem
+* if it is performed with `do`, a test is performed without isolation;
+* if it is performed with `do!`, a test is performed in isolation.
+
+Example of test without isolation:
+
+```ruby
+greeting = 'Hello, world!'
+
+Fix do
+  it 'tests without isolation' do
+    expect { greeting.gsub!('world', 'Alice') }.to equal 'Hello, Alice!'
+  end
+end
+
+greeting # => "Hello, Alice!"
+```
+
+Example of test in isolation:
+
+```ruby
+greeting = 'Hello, world!'
+
+Fix do
+  it 'tests with isolation' do
+    expect { greeting.gsub!('world', 'Alice') }.to! equal 'Hello, Alice!'
+  end
+end
+
+greeting # => "Hello, world!"
+```
+
+## Contact
+
+* Source code: https://github.com/fixrb/fix-expect
 
 ## Versioning
 
-__Fix::Expect__ follows [Semantic Versioning 2.0](http://semver.org/).
-
-## Contributing
-
-1. [Fork it](https://github.com/fixrb/fix-expect/fork)
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+__Fix::Expect__ follows [Semantic Versioning 2.0](https://semver.org/).
 
 ## License
 
-See `LICENSE.md` file.
+The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+
+***
+
+<p>
+  This project is sponsored by:<br />
+  <a href="https://sashite.com/"><img
+    src="https://github.com/fixrb/fix-expect/raw/master/img/sashite.png"
+    alt="Sashite" /></a>
+</p>
 
 [gem]: https://rubygems.org/gems/fix-expect
 [travis]: https://travis-ci.org/fixrb/fix-expect
 [codeclimate]: https://codeclimate.com/github/fixrb/fix-expect
-[gemnasium]: https://gemnasium.com/fixrb/fix-expect
-[inchpages]: http://inch-ci.org/github/fixrb/fix-expect
-[rubydoc]: http://rubydoc.info/gems/fix-expect/frames
-
-***
-
-This project is sponsored by:
-
-[![Sashite](https://sashite.com/img/sashite.png)](https://sashite.com/)
+[inchpages]: https://inch-ci.org/github/fixrb/fix-expect
+[rubydoc]: https://rubydoc.info/gems/fix-expect/frames
