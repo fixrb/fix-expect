@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'spectus'
+require "spectus"
 
 module Spectus
   class ExpectationTarget

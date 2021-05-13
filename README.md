@@ -1,9 +1,9 @@
 # Fix::Expect
 
-[![Build Status](https://api.travis-ci.org/fixrb/fix-expect.svg?branch=master)][travis]
+[![Build Status](https://api.travis-ci.org/fixrb/fix-expect.svg?branch=main)][travis]
 [![Code Climate](https://codeclimate.com/github/fixrb/fix-expect/badges/gpa.svg)][codeclimate]
 [![Gem Version](https://badge.fury.io/rb/fix-expect.svg)][gem]
-[![Inline docs](https://inch-ci.org/github/fixrb/fix-expect.svg?branch=master)][inchpages]
+[![Inline docs](https://inch-ci.org/github/fixrb/fix-expect.svg?branch=main)][inchpages]
 [![Documentation](https://img.shields.io/:yard-docs-38c800.svg)][rubydoc]
 
 > Provides the `expect` syntax.
@@ -13,7 +13,7 @@
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'fix-expect'
+gem "fix-expect"
 ```
 
 And then execute:
@@ -119,11 +119,11 @@ Because they may or may not be desired, each requirement level has 2 versions:
 Example of test without isolation:
 
 ```ruby
-greeting = 'Hello, world!'
+greeting = "Hello, world!"
 
 Fix do
-  it 'tests without isolation' do
-    expect { greeting.gsub!('world', 'Alice') }.to equal 'Hello, Alice!'
+  it "tests without isolation" do
+    expect { greeting.gsub!("world", "Alice") }.to equal "Hello, Alice!"
   end
 end
 
@@ -133,11 +133,11 @@ greeting # => "Hello, Alice!"
 Example of test in isolation:
 
 ```ruby
-greeting = 'Hello, world!'
+greeting = "Hello, world!"
 
 Fix do
-  it 'tests with isolation' do
-    expect { greeting.gsub!('world', 'Alice') }.to! equal 'Hello, Alice!'
+  it "tests with isolation" do
+    expect { greeting.gsub!("world", "Alice") }.to! equal "Hello, Alice!"
   end
 end
 
@@ -161,7 +161,7 @@ The gem is available as open source under the terms of the [MIT License](https:/
 <p>
   This project is sponsored by:<br />
   <a href="https://sashite.com/"><img
-    src="https://github.com/fixrb/fix-expect/raw/master/img/sashite.png"
+    src="https://github.com/fixrb/fix-expect/raw/main/img/sashite.png"
     alt="Sashite" /></a>
 </p>
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'fix'
+require "fix"
 
 # Namespace for the Fix framework.
 #
@@ -10,9 +10,12 @@ module Fix
     # Create a new expection target
     #
     # @param callable [#call] The object to test.
+    #
+    # rubocop:disable Lint/MissingSuper
     def initialize(callable)
       @callable = callable
     end
+    # rubocop:enable Lint/MissingSuper
   end
 
   # Wraps the target of a Fix expectation.
@@ -23,24 +26,24 @@ module Fix
     #
     # @return [Expect] An expect instance.
     def expect(object = nil, &block)
-      if block_given?
+      if block
         ::Fix::Expect.new(block)
       else
         ::Fix::Expect.new(::Defi.send(:itself).to(object))
       end
     end
 
-    # rubocop:disable PredicateName
-
     # Create a new expection target given the subject.
     #
     # @return [Expect] An expect instance.
+    #
+    # rubocop:disable Naming/PredicateName
     def is_expected
       ::Fix::Expect.new(callable)
     end
-    # rubocop:enable PredicateName
+    # rubocop:enable Naming/PredicateName
   end
 end
 
 # require_relative 'expect' unless defined?(::Fix::Expect)
-require_relative '../spectus/expectation_target'
+require_relative "../spectus/expectation_target"
